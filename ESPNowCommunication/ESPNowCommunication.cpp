@@ -1,3 +1,8 @@
+// ESP-NOW Mesh library for ESP32 / LoRa
+// Author: Benjamin Loh Choon How (2201590)
+// Co-Author: Woon JunWei (2200624)
+// Date: 2/4/2024y
+
 #include "ESPNowCommunication.h"
 #include "ProtocolManager.h"
 #include "MACaddr.h"
@@ -9,16 +14,19 @@ uint8_t numberOfHopsToMaster = 0;
 SensorData sensorData;
 Handshake msg;
 
+// Function to add a peer node to the peer list
 void addPeerToPeerList(const uint8_t *macAddr)
 {
   char macStr[18];
+  // Format the MAC address and store in sensor data struct
   formatMacAddress(macAddr, macStr, 18);
 
   Serial.printf("Received peer address: %s\n", macStr);
 
   memcpy(peerInfo.peer_addr, macAddr, 6); 
   peerInfo.channel = 0;                   
-  peerInfo.encrypt = false;              
+  peerInfo.encrypt = false;
+  // If peer does not exist in the list, add it          
   if (!esp_now_is_peer_exist(macAddr))
   {
     esp_now_add_peer(&peerInfo);
@@ -30,8 +38,8 @@ void addPeerToPeerList(const uint8_t *macAddr)
   }
 }
 
+// Function to send sensor data to all peer nodes in mesh network
 void sendToAllPeers(const SensorData &sensorData)
-// Send the message to each peer in the peer list
 {
   esp_now_get_peer_num(&peer_num);
   Serial.println("Sending....");
@@ -41,11 +49,12 @@ void sendToAllPeers(const SensorData &sensorData)
     char macStr[18];
     formatMacAddress(peerInfo.peer_addr, macStr, 18);
     Serial.printf("Peer address to send: %s\n", macStr);
+    // If peer exists in the list, send the sensor data
     if (esp_now_fetch_peer(1, &peerInfo) == ESP_OK)
     {
       esp_err_t result = esp_now_send(peerInfo.peer_addr, (const uint8_t *)&sensorData, sizeof(SensorData));
 
-      // Print results to serial monitor
+      // Print results to serial monitor when data sent successfully
       if (result == ESP_OK)
       {
         Serial.printf("Forwarded message to: %02X:%02X:%02X:%02X:%02X:%02X\n",
@@ -64,18 +73,17 @@ void sendToAllPeers(const SensorData &sensorData)
   }
 }
 
+// Function to handle received data
 void receiveCallback(const uint8_t *macAddr, const uint8_t *data, int dataLen)
-// Called when data is received
 {
   // Format the MAC address
   char macStr[18];
   formatMacAddress(macAddr, macStr, 18);
 
-  // when sensor data received
+  // when sensor data received match the size of SensorData struct
   if (dataLen == sizeof(SensorData))
   {
     Serial.println("Sensor Data received");
-    // Message is sensor data from peer nodes
     SensorData receivedData;
     memcpy(&receivedData, data, sizeof(SensorData));
 
@@ -88,10 +96,10 @@ void receiveCallback(const uint8_t *macAddr, const uint8_t *data, int dataLen)
 
     sendToAllPeers(receivedData);
   }
+  // when handshake message received match the size of Handshake struct
   else if (dataLen == sizeof(Handshake))
   {
     Serial.println("Handshake received");
-    // Message is a handshake message
     Handshake receivedMsg;
     memcpy(&receivedMsg, data, sizeof(Handshake));
 
@@ -147,7 +155,7 @@ void receiveCallback(const uint8_t *macAddr, const uint8_t *data, int dataLen)
         Serial.println("Unknown error");
       }
     }
-    // handle replies
+    // handle replies from nearby nodes
     else if (receivedMsg.requestType == 1)
     {
       Serial.println("Reply received");
@@ -174,8 +182,7 @@ void receiveCallback(const uint8_t *macAddr, const uint8_t *data, int dataLen)
   }
 }
 
-// Health Check function
-
+// Function to handle sent data
 void sentCallback(const uint8_t *macAddr, esp_now_send_status_t status) {
   if (status == ESP_NOW_SEND_SUCCESS) {
     Serial.println("Message sent successfully");
@@ -187,12 +194,13 @@ void sentCallback(const uint8_t *macAddr, esp_now_send_status_t status) {
   }
 }
 
+// Function to send a broadcast message for peer discovery
 void broadcast(const Handshake &msg)
-// Emulates a broadcast
 {
-  // Broadcast a message to every device in range
+  // Broadcast address
   uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
+  // Add broadcast address to peer list
   memcpy(&peerInfo.peer_addr, broadcastAddress, 6);
   if (!esp_now_is_peer_exist(broadcastAddress))
   {
@@ -236,9 +244,9 @@ void broadcast(const Handshake &msg)
   }
 }
 
+// Initialize ESP-NOW
 void espnowSetup()
 {
-  // Initialize ESP-NOW
   if (esp_now_init() == ESP_OK)
   {
     Serial.println("ESP-NOW Init Success");
@@ -253,46 +261,48 @@ void espnowSetup()
     ESP.restart();
   }
 
-  // esp_wifi_set_promiscuous(true);
-  // esp_wifi_set_channel(13, WIFI_SECOND_CHAN_NONE);
-  // esp_wifi_set_promiscuous(false);
+  // Set up SCD4x sensor
+  esp_wifi_set_promiscuous(true);
+  esp_wifi_set_channel(13, WIFI_SECOND_CHAN_NONE);
+  esp_wifi_set_promiscuous(false);
 
-  //  Wire.begin(I2C_SDA, I2C_SCL);
-  //
-  //  uint16_t error;
-  //  char errorMessage[256];
-  //
-  //  scd4x.begin(Wire);
-  //
-  //  // stop potentially previously started measurement
-  //  error = scd4x.stopPeriodicMeasurement();
-  //  if (error) {
-  //    Serial.print("Error trying to execute stopPeriodicMeasurement(): ");
-  //    errorToString(error, errorMessage, 256);
-  //    Serial.println(errorMessage);
-  //  }
-  //
-  //  uint16_t serial0;
-  //  uint16_t serial1;
-  //  uint16_t serial2;
-  //  error = scd4x.getSerialNumber(serial0, serial1, serial2);
-  //  if (error) {
-  //    Serial.print("Error trying to execute getSerialNumber(): ");
-  //    errorToString(error, errorMessage, 256);
-  //    Serial.println(errorMessage);
-  //  } else {
-  //    printSerialNumber(serial0, serial1, serial2);
-  //  }
-  //
-  //  // Start Measurement
-  //  error = scd4x.startPeriodicMeasurement();
-  //  if (error) {
-  //    Serial.print("Error trying to execute startPeriodicMeasurement(): ");
-  //    errorToString(error, errorMessage, 256);
-  //    Serial.println(errorMessage);
-  //  }
+   Wire.begin(I2C_SDA, I2C_SCL);
+  
+   uint16_t error;
+   char errorMessage[256];
+  
+   scd4x.begin(Wire);
+  
+   // stop potentially previously started measurement
+   error = scd4x.stopPeriodicMeasurement();
+   if (error) {
+     Serial.print("Error trying to execute stopPeriodicMeasurement(): ");
+     errorToString(error, errorMessage, 256);
+     Serial.println(errorMessage);
+   }
+  
+   uint16_t serial0;
+   uint16_t serial1;
+   uint16_t serial2;
+   error = scd4x.getSerialNumber(serial0, serial1, serial2);
+   if (error) {
+     Serial.print("Error trying to execute getSerialNumber(): ");
+     errorToString(error, errorMessage, 256);
+     Serial.println(errorMessage);
+   } else {
+     printSerialNumber(serial0, serial1, serial2);
+   }
+  
+   // Start Measurement
+   error = scd4x.startPeriodicMeasurement();
+   if (error) {
+     Serial.print("Error trying to execute startPeriodicMeasurement(): ");
+     errorToString(error, errorMessage, 256);
+     Serial.println(errorMessage);
+   }
 }
 
+// Uninitialize ESP-NOW
 void espnowUninit()
 {
   esp_now_deinit();
@@ -300,6 +310,7 @@ void espnowUninit()
   esp_now_unregister_send_cb();
 }
 
+// Polling loop for ESP-NOW communication
 void espnowLoop()
 {
   SensorData sensorData;

@@ -1,3 +1,7 @@
+// Author: Benjamin Loh Choon How (2201590)
+// Co-Author: Woon JunWei (2200624)
+// Date: 2/4/2024
+// description: This file contains the ESPNow communication library function prototypes and the data structs for transmitting sensor data.
 #include "MACaddr.h"
 #ifndef ESP_NOW_COMMUNICATION_H
 #define ESP_NOW_COMMUNICATION_H
@@ -29,8 +33,8 @@
 
 // Struc for transmitting sensor data
 struct SensorData {
-  // uint8_t rootNodeAddress;
-  char MACaddr[MAX_MAC_LENGTH];  // Use a char array to store the MAC address
+  // Use a char array to store the MAC address
+  char MACaddr[MAX_MAC_LENGTH];
   float c02Data;
   float temperatureData;
   float humidityData;
@@ -38,9 +42,9 @@ struct SensorData {
 
 // Connection Request Struct
 struct Handshake {
-  // 0 for request, 1 for reply
+  // request type 0 for request, 1 for reply
   uint8_t requestType;
-  // 1 if connected to master, 0 otherwise
+  // status 1 if connected to master, 0 otherwise
   uint8_t isConnectedToMaster;
   // number of hops to master
   uint8_t numberOfHopsToMaster;
