@@ -43,6 +43,11 @@ Through the resolution of this pressing problem, the project endeavors to pave t
 - How to deploy and run the network.
 - Examples of monitoring and reporting.
 
+### Master Node Infrastructure
+
+A detailed guide on how to run the ELK Backend and MQTT Broker is detailed in [Master Node Infrastructure Readme](./elastic-stack-docker/README.md).
+
+
 ## Dashboard Statistics
 
 ### ESP-NOW Node Power Consumption
