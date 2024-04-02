@@ -1,3 +1,9 @@
+// COPYRIGHT NOTICE: (c) Singapore Institute of Technology
+// @authors: Low Hong Sheng Jovian (2203654), 2024 All rights reserved.
+//           Woon Jun Wei (2200624)
+//           Benjamin Loh Choon How (2201590)
+//           Wang Rongqi Richie (2201942)
+
 #include <Arduino.h>
 #include "MACaddr.h"
 #include "ESPNowCommunication.h"
@@ -54,4 +60,3 @@ void loop() {
     loraLoop();
   }
 }
-

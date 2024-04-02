@@ -1,3 +1,7 @@
+# Raw Power Consumption Analysis for ESP-NOW and LoRa
+# COPYRIGHT NOTICE: (c) Singapore Institute of Technology
+# @author Low Hong Sheng Jovian (2203654), 2024 All rights reserved.
+
 import pandas as pd
 import os
 import matplotlib.pyplot as plt

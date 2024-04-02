@@ -1,4 +1,6 @@
-// Client
+// COPYRIGHT NOTICE: (c) Singapore Institute of Technology
+// @authors:   Benjamin Loh Choon How (2201590), 2024 All rights reserved.
+// @coauthors: Low Hong Sheng Jovian (2203654)
 
 #include <WiFi.h>
 #include <esp_now.h>
