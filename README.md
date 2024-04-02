@@ -30,18 +30,45 @@ Through the resolution of this pressing problem, the project endeavors to pave t
 
 ### Prerequisites
 
-- List of hardware and software requirements.
-- Installation procedures for necessary tools and libraries.
+#### Hardware Requirements
+- LilyGO TTGO T-Beam V1.1 ESP32 LoRa Module: This hardware module is used as nodes that communicate in the Wireless Sensor Network using the ESP-NOW protocol as default and failover to LoRa in case of failure.
+- Raspberry Pi 4 Model B: This hardware module is used as the sink node that collects data from the nodes and sends it to the backend.
+- Sensirion SCD4x CO2 Sensor Module: This hardware module is used to measure the CO2 levels and other environment data in the environment.
 
-### Installation
+#### Software Requirements
+- Arduino IDE: This is the primary software used for writing and uploading the code to the Arduino board.
+- ESP-NOW Library: This library is used for communication between ESP32 devices.
+- LoRa Library (RadioLib): This library is used for communication using LoRa modules.
+- SensirionI2CScd4x Library: This library is used for interfacing with the Sensirion SCD4x CO2 sensor module.
+- SPI Library: This library is used for communication with devices using the Serial Peripheral Interface (SPI).
+- Wire Library: This library is used for communication with devices using the I2C protocol.
 
-1. Steps to install the project.
-2. Configuration guidelines.
+#### Installation Procedures
+- Install the Arduino IDE from the official website.
+- Install the ESP-NOW library from the Arduino Library Manager.
+- Install the RadioLib library from the Arduino Library Manager.
+- Install the SensirionI2CScd4x library from the Arduino Library Manager.
+- Install the SPI library from the Arduino Library Manager.
+- Install the Wire library from the Arduino Library Manager.
+- Install the ESP32 board package from the Arduino Board Manager.
+- Download the code from the repository and shift these folders to the Arduino libraries folder.
+  - `ESPNowCommunication`
+  - `LoraCommunication`
+  - `MACaddr`
+  - `Protocol_Manager`
+
+[//]: # (### Installation)
+
+[//]: # ()
+[//]: # (1. Steps to install the project.)
+
+[//]: # (2. Configuration guidelines.)
 
 ## Usage
 
-- How to deploy and run the network.
-- Examples of monitoring and reporting.
+### Peer Nodes Deployment
+- Connect the LilyGO TTGO T-Beam V1.1 ESP32 LoRa Module to the computer using a USB cable.
+- Open the Arduino IDE and upload `Main.ino` from the `Main` folder to the LilyGO TTGO T-Beam V1.1 ESP32 LoRa Module.
 
 ### Master Node Infrastructure
 
