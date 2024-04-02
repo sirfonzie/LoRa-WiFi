@@ -35,9 +35,9 @@
 #define DATA_MESSAGE 2
 #define DATA_REPLY_MESSAGE 3
 
-#define WAITING_THRESHOLD 1000      // 4 seconds reply waiting time
+#define WAITING_THRESHOLD 3000      // 4 seconds reply waiting time
 #define MAX_RETRY 3                 // 3 retries
-#define SENSOR_DATA_INTERVAL 1000  // 10 seconds update interval
+#define SENSOR_DATA_INTERVAL 3000  // 10 seconds update interval
 
 // global variables
 extern SX1280 radio;

@@ -313,6 +313,9 @@ void transmitData(String* data) {
   // switch to transmit mode and send data
   int state = radio.startTransmit(*data);
 
+  Serial.print("Sending message: ");
+  Serial.println(*data);
+
   if (state == RADIOLIB_ERR_NONE) {
     txStart = true;
     // if data is of type SensorData or DiscoveryMessage, add to dataSending
@@ -487,7 +490,6 @@ void loraSetup() {
 }
 
 void loraLoop() {
-  Serial.println("loraLoop");
   // regularly get the sensor data to send
   unsigned long timeNow = millis();
   static unsigned long sensorTimer = 0;
@@ -501,7 +503,6 @@ void loraLoop() {
   }
 
   if (rxFlag == true) {
-    Serial.println("rxFlag");
     String receivedMsg;
     int state = radio.readData(receivedMsg);
     if (state == RADIOLIB_ERR_NONE) {
@@ -532,7 +533,6 @@ void loraLoop() {
   }
 
   if (txDone == true) {
-    Serial.println("txDone");
     txDone = false;
     int state = radio.startReceive();
     if (state != RADIOLIB_ERR_NONE) {
@@ -544,7 +544,6 @@ void loraLoop() {
   // if timer is set, check if it's time
   if (replyTimerFlag == true) {
     if (timeNow - replyTimer >= WAITING_THRESHOLD) {
-      Serial.println("replyTimerFlag");
       retry_fail_count++;
       failedMessageCount++;
       replyTimerFlag = false;
@@ -588,5 +587,5 @@ void loraLoop() {
     String data = dataReceived.head->data;
     processStringReceived(&data);
   }
-  delay(2);
+  delay(20);
 }  // loop

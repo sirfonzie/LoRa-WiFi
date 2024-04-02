@@ -25,10 +25,10 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Ben ben says hi! Failed Message Count: " + String(failedMessageCount));
+  Serial.println("Failed Message Count: " + String(failedMessageCount));
 
   // Check if it's time to switch from ESP-NOW to LoRa or vice versa.
-  if (failedMessageCount == MAX_FAILED_MESSAGES) {
+  if (failedMessageCount >= MAX_FAILED_MESSAGES) {
     // Switch protocol
     isEspnow = !isEspnow; // Toggle between ESP-NOW and LoRa.
 
@@ -48,7 +48,9 @@ void loop() {
     Serial.println("Operating in ESP-NOW mode");
     espnowLoop();
   } else {
-    Serial.println("Operating in LoRa mode");
+    // Serial.println("Operating in LoRa mode");
+    Serial.print("Level: ");
+    Serial.println(selfLevel);
     loraLoop();
   }
 }
