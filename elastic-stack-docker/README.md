@@ -1,5 +1,6 @@
 # ElasticSearch, LogSatsh, Kibana stack on Docker
-
+> Woon Jun Wei (2200624)
+ 
 This folder contains all configurations and files to run an ElasticSearch, LogSatsh and Kibana stack on Docker.
 
 ## Requirements
@@ -44,5 +45,8 @@ The Kibana dashboard can be accessed at `http://localhost:5601`. The default use
 # License
 
 This project is licensed under the Apache License - see the [LICENSE](LICENSE) file for details.
-```
+
+# Analysis
+Please view the [Analysis](Analysis.md) file for a detailed analysis of the project.
+
 

@@ -1,3 +1,7 @@
+// Author: Benjamin Loh Choon How (2201590)
+// Author: Woon Jun Wei (2200624)
+// Date: 2/4/2024
+// description: This file contains the ESPNow communication implementation for the master node
 #ifndef ESP_NOW_IMPL_H
 #define ESP_NOW_IMPL_H
 
