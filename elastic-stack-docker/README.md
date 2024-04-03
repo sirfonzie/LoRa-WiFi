@@ -1,4 +1,4 @@
-# ElasticSearch, LogSatsh, Kibana stack on Docker
+# ElasticSearch, LogStash, Kibana stack on Docker
 > Woon Jun Wei (2200624)
  
 This folder contains all configurations and files to run an ElasticSearch, LogSatsh and Kibana stack on Docker.
